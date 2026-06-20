@@ -10,10 +10,11 @@ entriesRouter.get("/", async (request, response, next) => {
     const month = String(request.query["month"] ?? "");
     const type = String(request.query["type"] ?? "");
     let entries = await getEntries();
-    if (month)
+    if (month) {
       entries = entries.filter((entry) => {
         return entry.date.startsWith(month);
       });
+    }
     if (type === "income" || type === "expense") {
       entries = entries.filter((entry) => {
         return entry.type === type;

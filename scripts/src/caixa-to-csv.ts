@@ -100,7 +100,7 @@ function normalizeAmount(value: string): string {
   if (Number.isNaN(amount)) {
     throw new Error(`Invalid amount: ${value}`);
   }
-  return amount.toFixed(2);
+  return Math.abs(amount).toFixed(2);
 }
 
 function transformBankCsv(input: string, createdAt: string): OutputRow[] {

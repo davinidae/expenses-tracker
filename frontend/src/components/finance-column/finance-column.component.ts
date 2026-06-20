@@ -58,9 +58,9 @@ export class FinanceColumnComponent {
     const lastDay = new Date(Date.UTC(year, monthNumber, 0)).getUTCDate();
     const monthStart = `${this.month}-01`;
     const monthEnd = `${this.month}-${String(lastDay).padStart(2, "0")}`;
-    return this.salary.periods.filter(
-      (period) => period.startDate <= monthEnd && period.endDate >= monthStart,
-    );
+    return this.salary.periods.filter((period) => {
+      return period.startDate <= monthEnd && period.endDate >= monthStart;
+    });
   }
 
   protected requestAdd(): void {

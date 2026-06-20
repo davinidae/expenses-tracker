@@ -87,8 +87,9 @@ export async function buildTimeline(): Promise<FinanceTimeline> {
       .add(oneOffIncome).value;
     const savings = currency(income).subtract(expenses).value;
 
-    if (index === firstIndex)
+    if (index === firstIndex) {
       runningBalance = runningBalance.add(salary.openingBalance);
+    }
     runningBalance = runningBalance.add(savings);
 
     points.push({
