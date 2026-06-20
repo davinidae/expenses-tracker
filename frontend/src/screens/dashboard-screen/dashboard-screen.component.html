@@ -1,0 +1,72 @@
+<main class="dashboard">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">PERSONAL FINANCE</p>
+      <h1>Money, month by month.</h1>
+      <p class="subtitle">Salary, one-off movements, and the bigger picture in one quiet place.</p>
+    </div>
+    <div class="header-actions">
+      <p-button
+        [icon]="themeService.theme() === 'dark' ? 'pi pi-sun' : 'pi pi-moon'"
+        [label]="themeService.theme() === 'dark' ? 'Light theme' : 'Dark theme'"
+        severity="secondary"
+        [outlined]="true"
+        size="small"
+        (onClick)="themeService.toggle()"
+      />
+      <label class="month-filter">
+        <span>Viewing month</span>
+        <p-datepicker
+          [(ngModel)]="selectedMonthDate"
+          view="month"
+          dateFormat="MM yy"
+          [readonlyInput]="true"
+          [showIcon]="true"
+          (onSelect)="changeMonth()"
+        />
+      </label>
+    </div>
+  </header>
+
+  @if (error()) {
+    <p-message severity="error" [text]="error()" styleClass="dashboard-message" />
+  }
+
+  <section class="columns" aria-label="Monthly financial entries">
+    <app-finance-column
+      type="salary"
+      [salary]="salary()"
+      [month]="selectedMonth"
+      [allowAdd]="true"
+      [allowEdit]="true"
+      [allowRemove]="true"
+      (add)="handleAdd($event)"
+      (edit)="openSalaryDialog($event)"
+      (removeSalary)="removeSalaryPeriod($event)"
+    />
+    <app-finance-column
+      type="income"
+      [entries]="incomeEntries()"
+      [month]="selectedMonth"
+      [allowAdd]="true"
+      [allowRemove]="true"
+      (add)="handleAdd($event)"
+      (remove)="removeEntry($event)"
+    />
+    <app-finance-column
+      type="expense"
+      [entries]="expenseEntries()"
+      [month]="selectedMonth"
+      [allowAdd]="true"
+      [allowRemove]="true"
+      (add)="handleAdd($event)"
+      (remove)="removeEntry($event)"
+    />
+  </section>
+
+  <app-finance-chart
+    [timeline]="timeline()"
+    [loading]="loading()"
+    [theme]="themeService.theme()"
+  />
+</main>

@@ -1,0 +1,96 @@
+@import "primeicons/primeicons.css";
+
+:root {
+  color-scheme: light;
+  --app-bg: #f7f9f7;
+  --app-bg-accent-one: rgba(207, 231, 216, .7);
+  --app-bg-accent-two: rgba(232, 237, 249, .55);
+  --surface-card: #ffffff;
+  --surface-muted: #f0f4f1;
+  --surface-accent: #eef6f1;
+  --border-color: #e2e8e4;
+  --border-soft: #e6ebe8;
+  --text-primary: #17251f;
+  --text-secondary: #52635b;
+  --text-muted: #829089;
+  --green: #28724f;
+  --green-soft: #eaf5ed;
+  --red: #bc5b45;
+  --red-soft: #fbefec;
+  --blue: #536fd1;
+  --shadow: 0 12px 40px rgba(30, 54, 44, .06);
+}
+
+:root.app-dark {
+  color-scheme: dark;
+  --app-bg: #0b1210;
+  --app-bg-accent-one: rgba(42, 103, 75, .2);
+  --app-bg-accent-two: rgba(55, 72, 128, .16);
+  --surface-card: #121c18;
+  --surface-muted: #19251f;
+  --surface-accent: #172920;
+  --border-color: #26362f;
+  --border-soft: #223129;
+  --text-primary: #edf6f1;
+  --text-secondary: #b6c7be;
+  --text-muted: #81958b;
+  --green: #6ed39d;
+  --green-soft: #173326;
+  --red: #f08c72;
+  --red-soft: #38221d;
+  --blue: #90a4ff;
+  --shadow: 0 16px 44px rgba(0, 0, 0, .28);
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--app-bg);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 90% 0%, var(--app-bg-accent-one), transparent 30%),
+    radial-gradient(circle at 0% 35%, var(--app-bg-accent-two), transparent 26%),
+    var(--app-bg);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color .2s ease, color .2s ease;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+.p-dynamic-dialog {
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 24px);
+}
+
+.p-dialog-content {
+  overflow-x: hidden;
+}
+
+@media (max-width: 600px) {
+  .p-dialog {
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px);
+  }
+
+  .p-dialog-content {
+    padding-inline: 14px;
+  }
+}

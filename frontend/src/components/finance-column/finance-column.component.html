@@ -1,0 +1,107 @@
+<p-card [styleClass]="'column-card ' + type + '-card'">
+  <ng-template #header>
+    <div class="column-heading">
+      <div>
+        <span>{{ kicker }}</span>
+        <h2>{{ title }}</h2>
+      </div>
+
+      @if (type !== 'salary') {
+        <strong [class]="type === 'income' ? 'total positive' : 'total negative'">
+          {{ total | currency:'EUR' }}
+        </strong>
+      }
+    </div>
+  </ng-template>
+
+  @if (type === 'salary') {
+    <div class="column-toolbar">
+      <span>{{ activeSalaryPeriods.length }} active periods in {{ month }}</span>
+      @if (allowAdd) {
+        <p-button label="Add" icon="pi pi-plus" size="small" (onClick)="requestAdd()" />
+      }
+    </div>
+
+    @if (salary.periods.length > 0 || salary.openingBalance !== 0) {
+      @if (salary.openingBalance !== 0) {
+        <div class="opening-balance-note">
+          <span>Opening balance</span>
+          <strong>{{ salary.openingBalance | currency:'EUR' }}</strong>
+        </div>
+      }
+      <div class="salary-period-list">
+        @for (period of activeSalaryPeriods; track period.id) {
+          <p-card styleClass="salary-period-card">
+            <div class="salary-period-row">
+              <div>
+                <strong>{{ period.monthlySalary | currency:'EUR' }}</strong>
+                <span>{{ period.startDate }} — {{ period.endDate }}</span>
+                <small>Extra pay: {{ period.extraPayAmount | currency:'EUR' }}</small>
+              </div>
+              <div class="salary-row-actions">
+                @if (allowEdit) {
+                  <p-button
+                    label="Edit"
+                    icon="pi pi-pencil"
+                    severity="secondary"
+                    size="small"
+                    [text]="true"
+                    (onClick)="edit.emit(period)"
+                  />
+                }
+                @if (allowRemove) {
+                  <p-button
+                    label="Remove"
+                    icon="pi pi-trash"
+                    severity="danger"
+                    size="small"
+                    [text]="true"
+                    (onClick)="removeSalary.emit(period)"
+                  />
+                }
+              </div>
+            </div>
+          </p-card>
+        } @empty {
+          <div class="salary-prompt">
+            <span>No salary period is active this month.</span>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">
+        <div class="empty-icon">€</div>
+        <strong>Set up your salary</strong>
+        <p>Add one or more salary periods and keep opening balance separate.</p>
+      </div>
+    }
+  } @else {
+    <div class="column-toolbar">
+      <span>{{ entries.length }} items in {{ month }}</span>
+      @if (allowAdd) {
+        <p-button
+          label="Add"
+          icon="pi pi-plus"
+          size="small"
+          [severity]="type === 'income' ? 'success' : 'danger'"
+          (onClick)="requestAdd()"
+        />
+      }
+    </div>
+
+    <div class="entry-list">
+      @for (entry of entries; track entry.id) {
+        <app-entry-card
+          [entry]="entry"
+          [allowRemove]="allowRemove"
+          (remove)="remove.emit($event)"
+        />
+      } @empty {
+        <div class="list-empty">
+          <i [class]="'pi ' + emptyIcon"></i>
+          <span>No one-off {{ type }} this month.</span>
+        </div>
+      }
+    </div>
+  }
+</p-card>

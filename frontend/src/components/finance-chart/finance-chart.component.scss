@@ -1,0 +1,94 @@
+.chart-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+  margin: 0 0 8px;
+}
+
+h2 {
+  color: var(--text-primary);
+  font: 700 19px 'Manrope', sans-serif;
+  letter-spacing: -.6px;
+  margin: 0;
+}
+
+.chart-heading p:not(.eyebrow) {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin: 7px 0 0;
+}
+
+.chart-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.chart-wrap {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  height: 390px;
+  overflow: hidden;
+}
+
+.chart-wrap.loading {
+  opacity: .5;
+}
+
+.chart-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--text-muted);
+  font-size: 12px;
+  z-index: 2;
+}
+
+:host {
+  display: block;
+  margin-top: 19px;
+}
+
+:host ::ng-deep .chart-card {
+  width: 100%;
+  min-width: 0;
+  background: var(--surface-card);
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+:host ::ng-deep .chart-card .p-card-body {
+  padding: 25px;
+}
+
+@media (max-width: 700px) {
+  .chart-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .chart-controls {
+    justify-content: flex-start;
+  }
+
+  :host ::ng-deep .chart-controls .p-button {
+    flex: 1 1 140px;
+  }
+  .chart-wrap {
+    height: 320px;
+  }
+}

@@ -1,0 +1,38 @@
+<p-card styleClass="chart-card">
+  <div class="chart-heading">
+    <div>
+      <p class="eyebrow">COMPLETE HISTORY · VALUES IN EUR</p>
+      <h2>Income, expenses & savings</h2>
+      <p>Hover for values. Scroll to zoom and drag to move through time.</p>
+    </div>
+    <div class="chart-controls">
+      <p-button
+        label="Monthly savings"
+        size="small"
+        [outlined]="savingsMode !== 'monthly'"
+        (onClick)="setSavingsMode('monthly')"
+      />
+      <p-button
+        label="Cumulative balance"
+        size="small"
+        [outlined]="savingsMode !== 'cumulative'"
+        (onClick)="setSavingsMode('cumulative')"
+      />
+      <p-button
+        label="Reset zoom"
+        icon="pi pi-refresh"
+        severity="secondary"
+        size="small"
+        [outlined]="true"
+        (onClick)="resetZoom()"
+      />
+    </div>
+  </div>
+
+  <div class="chart-wrap" [class.loading]="loading">
+    @if (!loading && timeline.points.length === 0) {
+      <div class="chart-empty">Add salary settings or an entry to begin your timeline.</div>
+    }
+    <canvas #financeChart></canvas>
+  </div>
+</p-card>

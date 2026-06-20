@@ -1,0 +1,27 @@
+<p-card [styleClass]="'entry-card ' + entry.type + '-entry'">
+  <div class="entry-content">
+    <div class="entry-copy">
+      <strong>{{ entry.name }}</strong>
+      <small>{{ entry.date | date:'dd MMM yyyy':'UTC' }}</small>
+      @if (entry.description) {
+        <p>{{ entry.description }}</p>
+      }
+      <div class="currency-detail">
+        <span>{{ entry.amount | currency:entry.currency }}</span>
+        @if (entry.currency !== 'EUR') {
+          <span>≈ {{ entry.euroAmount | currency:'EUR' }}</span>
+        }
+      </div>
+    </div>
+    @if (allowRemove) {
+      <p-button
+        label="Remove"
+        icon="pi pi-trash"
+        severity="danger"
+        size="small"
+        [text]="true"
+        (onClick)="remove.emit(entry)"
+      />
+    }
+  </div>
+</p-card>

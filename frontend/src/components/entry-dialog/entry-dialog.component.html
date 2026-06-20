@@ -1,0 +1,92 @@
+<form #entryForm="ngForm" class="dialog-form" (ngSubmit)="submit(entryForm)">
+    <p-message
+      severity="secondary"
+      [text]="'EUR values are recalculated from live rates whenever the dashboard loads.'"
+    />
+    <label>
+      <span>Name</span>
+      <input
+        pInputText
+        name="entryName"
+        [(ngModel)]="model.name"
+        maxlength="100"
+        placeholder="e.g. Freelance project"
+        required
+      >
+    </label>
+    <div class="dialog-grid">
+      <label>
+        <span>Amount</span>
+        <p-inputnumber
+          name="entryAmount"
+          [(ngModel)]="model.amount"
+          mode="decimal"
+          [min]="0.01"
+          [minFractionDigits]="2"
+          [maxFractionDigits]="2"
+          required
+        />
+      </label>
+      <label>
+        <span>Currency used</span>
+        <p-select
+          name="entryCurrency"
+          [(ngModel)]="model.currency"
+          [options]="currencies"
+          optionLabel="name"
+          optionValue="code"
+          [filter]="true"
+          filterBy="name,code"
+          appendTo="body"
+          required
+        >
+          <ng-template #selectedItem let-selected>
+            <span>{{ selected.code }} · {{ selected.name }}</span>
+          </ng-template>
+          <ng-template #item let-currency>
+            <span>{{ currency.code }} · {{ currency.name }}</span>
+          </ng-template>
+        </p-select>
+      </label>
+    </div>
+    <label>
+      <span>Date</span>
+      <p-datepicker
+        name="entryDate"
+        [(ngModel)]="entryDate"
+        dateFormat="dd/mm/yy"
+        [showIcon]="true"
+        [readonlyInput]="true"
+        required
+      />
+    </label>
+    <label>
+      <span>Description</span>
+      <textarea
+        pTextarea
+        name="entryDescription"
+        [(ngModel)]="model.description"
+        rows="4"
+        maxlength="500"
+        placeholder="Optional details"
+      ></textarea>
+    </label>
+
+    <div class="dialog-actions">
+      <span></span>
+      <p-button
+        label="Cancel"
+        severity="secondary"
+        [outlined]="true"
+        type="button"
+        (onClick)="close()"
+      />
+      <p-button
+        [label]="type === 'income' ? 'Add income' : 'Add expense'"
+        icon="pi pi-plus"
+        type="submit"
+        [severity]="type === 'income' ? 'success' : 'danger'"
+        [disabled]="entryForm.invalid"
+      />
+    </div>
+  </form>

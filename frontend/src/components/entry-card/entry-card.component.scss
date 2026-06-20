@@ -1,0 +1,83 @@
+.entry-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.entry-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.entry-copy strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.entry-copy small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 10px;
+  margin-top: 3px;
+}
+
+.entry-copy p {
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.45;
+  margin: 6px 0;
+  overflow-wrap: anywhere;
+}
+
+.currency-detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 7px;
+}
+
+.currency-detail span {
+  color: var(--text-secondary);
+  background: var(--surface-muted);
+  border-radius: 6px;
+  padding: 4px 7px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.income-entry .currency-detail span:first-child {
+  color: var(--green);
+  background: var(--green-soft);
+}
+
+.expense-entry .currency-detail span:first-child {
+  color: var(--red);
+  background: var(--red-soft);
+}
+
+:host ::ng-deep .entry-card {
+  width: 100%;
+  min-width: 0;
+  background: var(--surface-card);
+  border: 1px solid var(--border-soft);
+  box-shadow: none;
+}
+
+:host ::ng-deep .entry-card .p-card-body {
+  padding: 12px;
+}
+
+@media (max-width: 700px) {
+  .entry-content {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  :host ::ng-deep .entry-content > .p-button {
+    align-self: flex-end;
+  }
+}

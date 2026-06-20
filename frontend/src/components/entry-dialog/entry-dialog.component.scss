@@ -1,0 +1,59 @@
+.dialog-form {
+  display: grid;
+  gap: 17px;
+  padding-top: 5px;
+}
+
+.dialog-form label {
+  display: grid;
+  gap: 7px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.dialog-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 13px;
+}
+
+.dialog-actions {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+:host ::ng-deep .dialog-form .p-inputnumber,
+:host ::ng-deep .dialog-form .p-inputnumber-input,
+:host ::ng-deep .dialog-form .p-select,
+:host ::ng-deep .dialog-form .p-datepicker,
+:host ::ng-deep .dialog-form .p-datepicker-input,
+.dialog-form input,
+.dialog-form textarea {
+  width: 100%;
+}
+
+.dialog-form textarea {
+  resize: vertical;
+}
+
+@media (max-width: 700px) {
+  .dialog-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dialog-actions {
+    grid-template-columns: 1fr 1fr;
+
+    > span {
+      display: none;
+    }
+  }
+
+  :host ::ng-deep .dialog-actions .p-button {
+    width: 100%;
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "expenses-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install --prefix frontend && npm install --prefix backend",
+    "start": "concurrently -n API,WEB -c magenta,cyan \"npm run dev:api\" \"npm run dev:web\"",
+    "dev": "npm start",
+    "dev:web": "npm run start --prefix frontend",
+    "dev:api": "npm run dev --prefix backend",
+    "build": "npm run build:web && npm run build:api",
+    "build:web": "npm run build --prefix frontend",
+    "build:api": "npm run build --prefix backend",
+    "serve": "npm run serve --prefix backend",
+    "test:smoke": "npm run test:smoke --prefix backend",
+    "test:finance": "npm run test:finance --prefix backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
