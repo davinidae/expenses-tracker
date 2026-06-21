@@ -113,8 +113,16 @@ function normalizeForCompare(text: string): string {
 function isSelfOrAccountish(text: string): boolean {
   const normalized = normalizeForCompare(text);
 
-  if (!normalized) return false;
-  if (selfPatterns.some((pattern) => normalized.includes(pattern))) return true;
+  if (!normalized) {
+    return false;
+  }
+  if (
+    selfPatterns.some((pattern) => {
+      return normalized.includes(pattern);
+    })
+  ) {
+    return true;
+  }
 
   return /^\d{4}\s+\d{2}\s+\d{7,}/.test(normalized);
 }
@@ -164,7 +172,11 @@ function createId(
   direction: Direction,
   fields: unknown[],
 ): string {
-  const raw = `${rowIndex}|${direction}|${fields.map((field) => String(field ?? "")).join("|")}`;
+  const raw = `${rowIndex}|${direction}|${fields
+    .map((field) => {
+      return String(field ?? "");
+    })
+    .join("|")}`;
   return `txn_${crypto.createHash("sha1").update(raw).digest("hex").slice(0, 12)}`;
 }
 
@@ -261,16 +273,22 @@ function toCsv(rows: OutputRow[]): string {
   const lines = [headers.join(",")];
 
   for (const row of rows) {
-    lines.push(headers.map((key) => escapeCsv(row[key])).join(","));
+    lines.push(
+      headers
+        .map((key) => {
+          return escapeCsv(row[key]);
+        })
+        .join(","),
+    );
   }
 
   return `${lines.join("\n")}\n`;
 }
 
 function findHeaderRow(rows: RawRow[]): number {
-  const index = rows.findIndex((row) =>
-    row.map(cleanText).includes("F. Operación"),
-  );
+  const index = rows.findIndex((row) => {
+    return row.map(cleanText).includes("F. Operación");
+  });
 
   if (index === -1) {
     throw new Error(
@@ -341,7 +359,9 @@ function transform(
     const currency = cleanText(row[currencyIndex]) || "EUR";
     const common = cleanText(row[commonIndex]);
     const own = cleanText(row[ownIndex]);
-    const comps = compIndexes.map((index) => cleanText(row[index]));
+    const comps = compIndexes.map((index) => {
+      return cleanText(row[index]);
+    });
     const name = bestName(common, own, comps);
 
     const outputRow: OutputRow = {
