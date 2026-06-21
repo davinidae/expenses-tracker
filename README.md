@@ -66,7 +66,8 @@ Financial data uses three independent CSV databases:
 
 The salary CSV contains one separate opening-balance row and any number of
 salary-period rows. Each period stores monthly salary, extra pay, start date,
-and end date. Overlapping periods are summed for the selected month and chart.
+end date, company name, position description, and currency. Overlapping periods
+are converted to EUR in real time and summed for the selected month and chart.
 Income and expense rows contain the entered name,
 amount, description, currency, and full transaction date. Exchange rates and
 EUR amounts are never stored in CSV. The backend recalculates EUR values from

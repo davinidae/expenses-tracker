@@ -13,15 +13,27 @@
         }
       </div>
     </div>
-    @if (allowRemove) {
-      <p-button
-        label="Remove"
-        icon="pi pi-trash"
-        severity="danger"
-        size="small"
-        [text]="true"
-        (onClick)="remove.emit(entry)"
-      />
-    }
+    <div class="entry-actions">
+      @if (allowEdit) {
+        <p-button
+          label="Edit"
+          icon="pi pi-pencil"
+          severity="secondary"
+          size="small"
+          [text]="true"
+          (onClick)="edit.emit(entry)"
+        />
+      }
+      @if (allowRemove) {
+        <p-button
+          label="Remove"
+          icon="pi pi-trash"
+          severity="danger"
+          size="small"
+          [text]="true"
+          (onClick)="remove.emit(entry)"
+        />
+      }
+    </div>
   </div>
 </p-card>

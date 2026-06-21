@@ -3,18 +3,15 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import type { EntryType, FinancialEntryInput } from '../../models/finance';
+import { CURRENCIES } from '../../constants/currencies';
+import { ConfirmDialogDismissDirective } from '../../directives/confirm-dialog-dismiss.directive';
+import { MoneyInputDirective } from '../../directives/money-input.directive';
 import type { EntryDialogData } from './entry-dialog.models';
-
-interface CurrencyOption {
-  code: string;
-  name: string;
-}
 
 @Component({
   selector: 'app-entry-dialog',
@@ -23,11 +20,12 @@ interface CurrencyOption {
     FormsModule,
     ButtonModule,
     DatePickerModule,
-    InputNumberModule,
     InputTextModule,
     MessageModule,
     SelectModule,
-    TextareaModule
+    TextareaModule,
+    ConfirmDialogDismissDirective,
+    MoneyInputDirective
   ],
   templateUrl: './entry-dialog.component.html',
   styleUrl: './entry-dialog.component.scss'
@@ -38,31 +36,23 @@ export class EntryDialogComponent {
 
   protected readonly type: EntryType = this.config.data?.type ?? 'income';
   protected readonly month = this.config.data?.month ?? new Date().toISOString().slice(0, 7);
-  protected entryDate = this.defaultDate();
+  protected readonly existingEntry = this.config.data?.entry;
+  protected entryDate = this.existingEntry
+    ? this.fromDateKey(this.existingEntry.date)
+    : this.defaultDate();
   protected model = this.emptyModel();
-  protected readonly currencies: CurrencyOption[] = [
-    { code: 'EUR', name: 'Euro' },
-    { code: 'USD', name: 'US Dollar' },
-    { code: 'GBP', name: 'British Pound' },
-    { code: 'CHF', name: 'Swiss Franc' },
-    { code: 'JPY', name: 'Japanese Yen' },
-    { code: 'CAD', name: 'Canadian Dollar' },
-    { code: 'AUD', name: 'Australian Dollar' },
-    { code: 'CNY', name: 'Chinese Yuan' },
-    { code: 'SEK', name: 'Swedish Krona' },
-    { code: 'NOK', name: 'Norwegian Krone' },
-    { code: 'DKK', name: 'Danish Krone' },
-    { code: 'PLN', name: 'Polish Zloty' },
-    { code: 'CZK', name: 'Czech Koruna' }
-  ];
+  protected readonly currencies = CURRENCIES;
 
   protected submit(form: NgForm): void {
     if (form.invalid) return;
     this.ref.close({
-      ...this.model,
-      date: this.toDateKey(this.entryDate),
-      name: this.model.name.trim(),
-      description: this.model.description.trim()
+      id: this.existingEntry?.id,
+      input: {
+        ...this.model,
+        date: this.toDateKey(this.entryDate),
+        name: this.model.name.trim(),
+        description: this.model.description.trim()
+      }
     });
   }
 
@@ -71,6 +61,16 @@ export class EntryDialogComponent {
   }
 
   private emptyModel(): FinancialEntryInput {
+    if (this.existingEntry) {
+      return {
+        type: this.existingEntry.type,
+        name: this.existingEntry.name,
+        amount: this.existingEntry.amount,
+        description: this.existingEntry.description,
+        currency: this.existingEntry.currency,
+        date: this.existingEntry.date
+      };
+    }
     return {
       type: this.type,
       name: '',
@@ -96,5 +96,10 @@ export class EntryDialogComponent {
       String(date.getMonth() + 1).padStart(2, '0'),
       String(date.getDate()).padStart(2, '0')
     ].join('-');
+  }
+
+  private fromDateKey(date: string): Date {
+    const [year, month, day] = date.split('-').map(Number);
+    return new Date(year, month - 1, day);
   }
 }

@@ -1,147 +1,68 @@
 .salary-editor {
   display: grid;
-  gap: 20px;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
 }
 
-.opening-balance,
-.section-heading,
-.period-content,
 .dialog-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
-}
-
-.opening-balance {
-  padding: 14px;
-  background: var(--surface-accent);
-  border-radius: 12px;
-
-  > div {
-    display: grid;
-    gap: 4px;
-  }
-}
-
-strong {
-  color: var(--text-primary);
-  font-size: 13px;
-}
-
-small {
-  color: var(--text-muted);
-  font-size: 10px;
+  gap: 8px;
 }
 
 .period-form {
   display: grid;
-  gap: 14px;
-  padding: 15px;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-}
-
-.section-heading > div {
-  display: grid;
-  gap: 4px;
+  gap: 7px;
+  width: 100%;
+  min-width: 0;
 }
 
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 13px;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: 7px;
+  width: 100%;
+  min-width: 0;
 }
 
 label {
   display: grid;
-  gap: 7px;
+  gap: 4px;
+  width: 100%;
+  min-width: 0;
   color: var(--text-secondary);
   font-size: 12px;
   font-weight: 700;
 }
 
-.period-list {
-  display: grid;
-  gap: 10px;
-  max-height: 280px;
-  overflow-y: auto;
-}
-
-.period-content > div:first-child {
-  display: grid;
-  gap: 4px;
-}
-
-.period-content span {
-  color: var(--text-secondary);
-  font-size: 11px;
-}
-
-.period-actions {
-  display: flex;
-}
-
-.empty-periods {
-  padding: 30px;
-  color: var(--text-muted);
-  text-align: center;
-  font-size: 11px;
-}
-
 .dialog-actions {
-  display: grid;
-  grid-template-columns: auto 1fr auto auto;
-  margin-top: 4px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  margin-top: 2px;
 }
 
-:host ::ng-deep .opening-balance .p-inputnumber,
-:host ::ng-deep .opening-balance .p-inputnumber-input,
+:host ::ng-deep .form-grid input,
 :host ::ng-deep .form-grid .p-inputnumber,
 :host ::ng-deep .form-grid .p-inputnumber-input,
 :host ::ng-deep .form-grid .p-datepicker,
-:host ::ng-deep .form-grid .p-datepicker-input {
+:host ::ng-deep .form-grid .p-datepicker-input,
+:host ::ng-deep .form-grid .p-select {
+  min-width: 0;
+  max-width: 100%;
   width: 100%;
 }
 
-:host ::ng-deep .opening-balance .p-inputnumber {
-  width: 190px;
-}
-
-:host ::ng-deep .period-card {
-  background: var(--surface-card);
-  border: 1px solid var(--border-soft);
-  box-shadow: none;
-}
-
-:host ::ng-deep .period-card .p-card-body {
-  padding: 12px;
-}
-
 @media (max-width: 620px) {
-  .opening-balance,
-  .period-content {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
   .form-grid {
     grid-template-columns: 1fr;
   }
 
   .dialog-actions {
+    display: grid;
     grid-template-columns: 1fr 1fr;
-
-    > span {
-      display: none;
-    }
-
-    > :first-child {
-      grid-column: 1 / -1;
-    }
-  }
-
-  :host ::ng-deep .opening-balance .p-inputnumber {
     width: 100%;
   }
 

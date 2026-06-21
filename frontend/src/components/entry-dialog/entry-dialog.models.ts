@@ -1,8 +1,16 @@
-import type { EntryType, FinancialEntryInput } from '../../models/finance';
+import type {
+  EntryType,
+  FinancialEntry,
+  FinancialEntryInput
+} from '../../models/finance';
 
 export interface EntryDialogData {
   type: EntryType;
   month: string;
+  entry?: FinancialEntry;
 }
 
-export type EntryDialogResult = FinancialEntryInput;
+export interface EntryDialogResult {
+  id?: string;
+  input: FinancialEntryInput;
+}

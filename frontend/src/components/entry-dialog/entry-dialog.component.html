@@ -1,4 +1,9 @@
-<form #entryForm="ngForm" class="dialog-form" (ngSubmit)="submit(entryForm)">
+<form
+  appConfirmDialogDismiss
+  #entryForm="ngForm"
+  class="dialog-form"
+  (ngSubmit)="submit(entryForm)"
+>
     <p-message
       severity="secondary"
       [text]="'EUR values are recalculated from live rates whenever the dashboard loads.'"
@@ -17,15 +22,15 @@
     <div class="dialog-grid">
       <label>
         <span>Amount</span>
-        <p-inputnumber
+        <input
+          pInputText
+          appMoneyInput
           name="entryAmount"
           [(ngModel)]="model.amount"
-          mode="decimal"
-          [min]="0.01"
-          [minFractionDigits]="2"
-          [maxFractionDigits]="2"
+          [moneyMin]="0.01"
+          placeholder="0.00"
           required
-        />
+        >
       </label>
       <label>
         <span>Currency used</span>
@@ -57,6 +62,8 @@
         dateFormat="dd/mm/yy"
         [showIcon]="true"
         [readonlyInput]="true"
+        appendTo="body"
+        [baseZIndex]="12000"
         required
       />
     </label>
@@ -82,8 +89,8 @@
         (onClick)="close()"
       />
       <p-button
-        [label]="type === 'income' ? 'Add income' : 'Add expense'"
-        icon="pi pi-plus"
+        [label]="existingEntry ? 'Save changes' : (type === 'income' ? 'Add income' : 'Add expense')"
+        [icon]="existingEntry ? 'pi pi-check' : 'pi pi-plus'"
         type="submit"
         [severity]="type === 'income' ? 'success' : 'danger'"
         [disabled]="entryForm.invalid"

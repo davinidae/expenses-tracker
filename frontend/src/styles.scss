@@ -84,6 +84,11 @@ textarea {
   overflow-x: hidden;
 }
 
+.p-datepicker-panel {
+  z-index: 12000 !important;
+  max-width: calc(100vw - 16px);
+}
+
 @media (max-width: 600px) {
   .p-dialog {
     width: calc(100vw - 20px) !important;
@@ -92,5 +97,9 @@ textarea {
 
   .p-dialog-content {
     padding-inline: 14px;
+  }
+
+  .p-datepicker-panel {
+    width: min(320px, calc(100vw - 16px));
   }
 }

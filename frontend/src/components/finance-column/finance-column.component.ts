@@ -30,16 +30,13 @@ export class FinanceColumnComponent {
 
   @Output() add = new EventEmitter<FinanceColumnType>();
   @Output() edit = new EventEmitter<SalaryPeriod>();
+  @Output() editEntry = new EventEmitter<FinancialEntry>();
   @Output() remove = new EventEmitter<FinancialEntry>();
   @Output() removeSalary = new EventEmitter<SalaryPeriod>();
 
   protected get title(): string {
     if (this.type === "salary") return "Salary & extra pay";
     return this.type === "income" ? "Income" : "Expenses";
-  }
-
-  protected get kicker(): string {
-    return this.type === "salary" ? "RECURRING" : "ONE-OFF";
   }
 
   protected get total(): number {

@@ -1,12 +1,12 @@
 .dialog-form {
   display: grid;
-  gap: 17px;
-  padding-top: 5px;
+  gap: 9px;
+  padding-top: 3px;
 }
 
 .dialog-form label {
   display: grid;
-  gap: 7px;
+  gap: 4px;
   color: var(--text-secondary);
   font-size: 12px;
   font-weight: 700;
@@ -15,15 +15,15 @@
 .dialog-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 13px;
+  gap: 7px;
 }
 
 .dialog-actions {
   display: grid;
   grid-template-columns: 1fr auto auto;
   align-items: center;
-  gap: 8px;
-  margin-top: 5px;
+  gap: 4px;
+  margin-top: 3px;
 }
 
 :host ::ng-deep .dialog-form .p-inputnumber,

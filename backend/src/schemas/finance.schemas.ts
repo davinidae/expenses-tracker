@@ -2,10 +2,13 @@ import { z } from "zod";
 
 const salaryPeriodSchema = z
   .object({
-    id: z.string().uuid().optional(),
-    createdAt: z.iso.datetime().optional(),
-    monthlySalary: z.number().nonnegative().max(10_000_000),
-    extraPayAmount: z.number().nonnegative().max(10_000_000),
+  id: z.string().uuid().optional(),
+  createdAt: z.iso.datetime().optional(),
+  companyName: z.string().trim().min(1).max(120),
+  positionDescription: z.string().trim().min(1).max(250),
+  currency: z.string().trim().toUpperCase().regex(/^[A-Z]{3}$/),
+  monthlySalary: z.number().positive().max(10_000_000),
+  extraPayAmount: z.number().positive().max(10_000_000),
     startDate: z.iso.date(),
     endDate: z.iso.date(),
   })

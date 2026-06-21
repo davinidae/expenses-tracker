@@ -1,10 +1,5 @@
 <main class="dashboard">
-  <header class="page-header">
-    <div>
-      <p class="eyebrow">PERSONAL FINANCE</p>
-      <h1>Money, month by month.</h1>
-      <p class="subtitle">Salary, one-off movements, and the bigger picture in one quiet place.</p>
-    </div>
+  <header class="page-controls">
     <div class="header-actions">
       <p-button
         [icon]="themeService.theme() === 'dark' ? 'pi pi-sun' : 'pi pi-moon'"
@@ -49,8 +44,10 @@
       [entries]="incomeEntries()"
       [month]="selectedMonth"
       [allowAdd]="true"
+      [allowEdit]="true"
       [allowRemove]="true"
       (add)="handleAdd($event)"
+      (editEntry)="editEntry($event)"
       (remove)="removeEntry($event)"
     />
     <app-finance-column
@@ -58,8 +55,10 @@
       [entries]="expenseEntries()"
       [month]="selectedMonth"
       [allowAdd]="true"
+      [allowEdit]="true"
       [allowRemove]="true"
       (add)="handleAdd($event)"
+      (editEntry)="editEntry($event)"
       (remove)="removeEntry($event)"
     />
   </section>

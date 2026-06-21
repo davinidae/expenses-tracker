@@ -1,61 +1,72 @@
-<div class="salary-editor">
-  <section class="opening-balance">
-    <div>
-      <strong>Opening balance</strong>
-      <small>Applied once at the beginning of the cumulative balance.</small>
-    </div>
-    <p-inputnumber
-      [(ngModel)]="model.openingBalance"
-      mode="currency"
-      currency="EUR"
-      locale="es-ES"
-      [minFractionDigits]="2"
-    />
-  </section>
-
+<div appConfirmDialogDismiss class="salary-editor">
   <form #periodForm="ngForm" class="period-form" (ngSubmit)="savePeriod(periodForm)">
-    <div class="section-heading">
-      <div>
-        <strong>{{ editingId ? 'Edit salary period' : 'Add salary period' }}</strong>
-        <small>Each period contributes to every calendar month it overlaps.</small>
-      </div>
-      @if (editingId) {
-        <p-button
-          label="Cancel edit"
-          severity="secondary"
-          [text]="true"
-          type="button"
-          (onClick)="cancelPeriodEdit()"
-        />
-      }
-    </div>
-
     <div class="form-grid">
       <label>
+        <span>Company name</span>
+        <input
+          pInputText
+          name="companyName"
+          [(ngModel)]="periodModel.companyName"
+          maxlength="120"
+          placeholder="Company"
+          required
+        >
+      </label>
+      <label>
+        <span>Position description</span>
+        <input
+          pInputText
+          name="positionDescription"
+          [(ngModel)]="periodModel.positionDescription"
+          maxlength="250"
+          placeholder="e.g. Senior developer"
+          required
+        >
+      </label>
+      <label>
         <span>Monthly salary</span>
-        <p-inputnumber
+        <input
+          pInputText
+          appMoneyInput
           name="monthlySalary"
           [(ngModel)]="periodModel.monthlySalary"
-          mode="currency"
-          currency="EUR"
-          locale="es-ES"
-          [min]="0"
-          [minFractionDigits]="2"
+          [moneyMin]="0.01"
+          placeholder="0.00"
           required
-        />
+        >
+      </label>
+      <label>
+        <span>Currency used</span>
+        <p-select
+          name="currency"
+          [(ngModel)]="periodModel.currency"
+          [options]="currencies"
+          optionLabel="name"
+          optionValue="code"
+          [filter]="true"
+          filterBy="name,code"
+          appendTo="body"
+          required
+        >
+          <ng-template #selectedItem let-selected>
+            <span>{{ selected.code }} · {{ selected.name }}</span>
+          </ng-template>
+          <ng-template #item let-currency>
+            <span>{{ currency.code }} · {{ currency.name }}</span>
+          </ng-template>
+        </p-select>
       </label>
       <label>
         <span>Extra pay amount</span>
-        <p-inputnumber
+        <input
+          pInputText
+          appMoneyInput
           name="extraPayAmount"
           [(ngModel)]="periodModel.extraPayAmount"
-          mode="currency"
-          currency="EUR"
-          locale="es-ES"
-          [min]="0"
-          [minFractionDigits]="2"
+          [moneyMin]="0.01"
+          placeholder="0.00"
           required
-        />
+        >
       </label>
       <label>
         <span>Start date</span>
@@ -65,6 +76,8 @@
           dateFormat="dd/mm/yy"
           [showIcon]="true"
           [readonlyInput]="true"
+          appendTo="body"
+          [baseZIndex]="12000"
           required
         />
       </label>
@@ -77,70 +90,14 @@
           [showIcon]="true"
           [readonlyInput]="true"
           [minDate]="startDate"
+          appendTo="body"
+          [baseZIndex]="12000"
           required
         />
       </label>
     </div>
-
-    <p-button
-      [label]="editingId ? 'Update period' : 'Add period'"
-      icon="pi pi-plus"
-      type="submit"
-      [disabled]="periodForm.invalid || endDate < startDate"
-    />
   </form>
-
-  <section class="period-list">
-    <div class="section-heading">
-      <div>
-        <strong>Salary periods</strong>
-        <small>{{ model.periods.length }} records</small>
-      </div>
-    </div>
-
-    @for (period of model.periods; track period.id || $index) {
-      <p-card styleClass="period-card">
-        <div class="period-content">
-          <div>
-            <strong>{{ period.monthlySalary | currency:'EUR' }} / month</strong>
-            <span>{{ period.startDate | date:'dd MMM yyyy':'UTC' }} — {{ period.endDate | date:'dd MMM yyyy':'UTC' }}</span>
-            <small>Extra pay: {{ period.extraPayAmount | currency:'EUR' }}</small>
-          </div>
-          <div class="period-actions">
-            <p-button
-              icon="pi pi-pencil"
-              severity="secondary"
-              [text]="true"
-              [rounded]="true"
-              ariaLabel="Edit salary period"
-              (onClick)="editPeriod(period)"
-            />
-            <p-button
-              icon="pi pi-trash"
-              severity="danger"
-              [text]="true"
-              [rounded]="true"
-              ariaLabel="Remove salary period"
-              (onClick)="removePeriod(period)"
-            />
-          </div>
-        </div>
-      </p-card>
-    } @empty {
-      <div class="empty-periods">No salary periods yet.</div>
-    }
-  </section>
-
   <div class="dialog-actions">
-    <p-button
-      label="Clear all"
-      icon="pi pi-trash"
-      severity="danger"
-      [text]="true"
-      type="button"
-      (onClick)="clear()"
-    />
-    <span></span>
     <p-button
       label="Cancel"
       severity="secondary"
@@ -152,7 +109,8 @@
       label="Save changes"
       icon="pi pi-check"
       type="button"
-      (onClick)="submit()"
+      [disabled]="periodForm.invalid || endDate < startDate"
+      (onClick)="submit(periodForm)"
     />
   </div>
 </div>

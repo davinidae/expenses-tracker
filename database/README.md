@@ -13,5 +13,8 @@ currency, exact transaction date, and internal identifiers. Exchange rates and
 EUR amounts are calculated by the backend at request time and are never stored
 in these files.
 
+Salary-period rows also store their original currency. Salary and extra-pay
+amounts are converted to EUR by the backend when chart data is requested.
+
 The Angular frontend must never read these files directly. It accesses financial
 data exclusively through the backend HTTP API.

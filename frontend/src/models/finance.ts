@@ -1,5 +1,8 @@
 export interface SalaryPeriod {
   id: string;
+  companyName: string;
+  positionDescription: string;
+  currency: string;
   monthlySalary: number;
   extraPayAmount: number;
   startDate: string;
@@ -9,7 +12,13 @@ export interface SalaryPeriod {
 
 export type SalaryPeriodInput = Pick<
   SalaryPeriod,
-  'monthlySalary' | 'extraPayAmount' | 'startDate' | 'endDate'
+  | 'companyName'
+  | 'positionDescription'
+  | 'currency'
+  | 'monthlySalary'
+  | 'extraPayAmount'
+  | 'startDate'
+  | 'endDate'
 >;
 
 export interface SalaryData {

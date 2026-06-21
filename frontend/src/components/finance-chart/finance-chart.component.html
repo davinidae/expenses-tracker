@@ -1,38 +1,41 @@
-<p-card styleClass="chart-card">
-  <div class="chart-heading">
-    <div>
-      <p class="eyebrow">COMPLETE HISTORY · VALUES IN EUR</p>
-      <h2>Income, expenses & savings</h2>
-      <p>Hover for values. Scroll to zoom and drag to move through time.</p>
-    </div>
-    <div class="chart-controls">
-      <p-button
-        label="Monthly savings"
-        size="small"
-        [outlined]="savingsMode !== 'monthly'"
-        (onClick)="setSavingsMode('monthly')"
-      />
-      <p-button
-        label="Cumulative balance"
-        size="small"
-        [outlined]="savingsMode !== 'cumulative'"
-        (onClick)="setSavingsMode('cumulative')"
-      />
+<section class="charts-grid" aria-label="Financial history charts">
+  <p-card styleClass="chart-card">
+    <div class="chart-heading">
+      <h2>Monthly savings</h2>
       <p-button
         label="Reset zoom"
         icon="pi pi-refresh"
         severity="secondary"
         size="small"
         [outlined]="true"
-        (onClick)="resetZoom()"
+        (onClick)="resetZoom('monthly')"
       />
     </div>
-  </div>
+    <div class="chart-wrap" [class.loading]="loading">
+      @if (!loading && timeline.points.length === 0) {
+        <div class="chart-empty">Add salary settings or an entry to begin your timeline.</div>
+      }
+      <canvas #monthlyChart></canvas>
+    </div>
+  </p-card>
 
-  <div class="chart-wrap" [class.loading]="loading">
-    @if (!loading && timeline.points.length === 0) {
-      <div class="chart-empty">Add salary settings or an entry to begin your timeline.</div>
-    }
-    <canvas #financeChart></canvas>
-  </div>
-</p-card>
+  <p-card styleClass="chart-card">
+    <div class="chart-heading">
+      <h2>Cumulative balance</h2>
+      <p-button
+        label="Reset zoom"
+        icon="pi pi-refresh"
+        severity="secondary"
+        size="small"
+        [outlined]="true"
+        (onClick)="resetZoom('cumulative')"
+      />
+    </div>
+    <div class="chart-wrap" [class.loading]="loading">
+      @if (!loading && timeline.points.length === 0) {
+        <div class="chart-empty">Add salary settings or an entry to begin your timeline.</div>
+      }
+      <canvas #cumulativeChart></canvas>
+    </div>
+  </p-card>
+</section>

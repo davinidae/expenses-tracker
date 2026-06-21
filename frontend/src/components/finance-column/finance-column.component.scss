@@ -2,16 +2,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
 
-  > div > span {
-    display: block;
-    color: var(--text-muted);
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 1.8px;
-    margin-bottom: 6px;
-  }
 }
 
 h2 {
@@ -37,18 +29,20 @@ h2 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
   color: var(--text-muted);
   font-size: 11px;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
 }
 
 .entry-list {
   display: grid;
-  gap: 10px;
-  max-height: 430px;
+  grid-auto-rows: max-content;
+  gap: 5px;
+  min-height: 0;
   overflow-y: auto;
-  padding-right: 2px;
+  padding: 0 1px 10px 0;
+  scroll-padding-bottom: 10px;
   min-width: 0;
 }
 
@@ -74,7 +68,7 @@ h2 {
   align-items: center;
   gap: 12px;
   margin-bottom: 10px;
-  padding: 10px 12px;
+  padding: 5px 6px;
   color: var(--text-secondary);
   background: var(--surface-muted);
   border-radius: 10px;
@@ -89,25 +83,33 @@ h2 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  margin-top: 18px;
+  gap: 6px;
+  margin-top: 9px;
   color: var(--text-muted);
   font-size: 11px;
 }
 
 .salary-period-list {
   display: grid;
-  gap: 10px;
-  max-height: 260px;
+  grid-auto-rows: max-content;
+  gap: 5px;
+  min-height: 0;
   overflow-y: auto;
+  padding-bottom: 10px;
+  scroll-padding-bottom: 10px;
   min-width: 0;
+}
+
+.entry-list > :last-child,
+.salary-period-list > :last-child {
+  margin-bottom: 1px;
 }
 
 .salary-period-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
   min-width: 0;
 
   > div {
@@ -129,9 +131,17 @@ h2 {
 }
 
 .salary-row-actions {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: stretch;
+  gap: 2px;
+  width: 92px;
   flex-shrink: 0;
+}
+
+:host ::ng-deep .salary-row-actions .p-button {
+  justify-content: flex-start;
+  width: 100%;
 }
 
 :host ::ng-deep .salary-period-card {
@@ -194,7 +204,8 @@ h2 {
 
 :host ::ng-deep .column-card {
   width: 100%;
-  min-height: 420px;
+  height: 100%;
+  min-height: 0;
   min-width: 0;
   background: var(--surface-card);
   border: 1px solid var(--border-color);
@@ -208,16 +219,42 @@ h2 {
 }
 
 :host ::ng-deep .column-card .p-card-header {
-  padding: 22px 22px 0;
+  padding: 11px 11px 0;
 }
 
 :host ::ng-deep .column-card .p-card-body {
-  padding: 18px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  padding: 9px 11px 11px;
   min-width: 0;
 }
 
-@media (max-width: 1050px) {
-  :host ::ng-deep .column-card {
-    min-height: auto;
+:host ::ng-deep .column-card .p-card-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+@media (max-width: 900px), (max-height: 700px) {
+  :host {
+    height: auto;
   }
+
+  :host ::ng-deep .column-card {
+    height: auto;
+    min-height: 360px;
+  }
+
+  .entry-list,
+  .salary-period-list {
+    max-height: 430px;
+  }
+}
+:host {
+  display: block;
+  height: 100%;
+  min-height: 0;
 }

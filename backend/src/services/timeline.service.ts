@@ -1,4 +1,5 @@
 import currency from "currency.js";
+import { convertToEuro } from "../currency.service.js";
 import type { FinanceTimeline, MonthlyPoint } from "../models/finance.js";
 import { getEntries, getSalary } from "../store.js";
 import { enrichEntries } from "./entry.service.js";
@@ -56,12 +57,26 @@ export async function buildTimeline(): Promise<FinanceTimeline> {
             return period.startDate <= monthEnd && period.endDate >= monthStart;
           })
         : [];
-    const monthlySalary = activePeriods.reduce((sum, period) => {
+    const convertedPeriods = await Promise.all(
+      activePeriods.map(async (period) => {
+        return {
+          monthlySalary: await convertToEuro(
+            period.monthlySalary,
+            period.currency,
+          ),
+          extraPayAmount: await convertToEuro(
+            period.extraPayAmount,
+            period.currency,
+          ),
+        };
+      }),
+    );
+    const monthlySalary = convertedPeriods.reduce((sum, period) => {
       return sum.add(period.monthlySalary);
     }, currency(0)).value;
     const extraPay =
       monthNumber === 6 || monthNumber === 12
-        ? activePeriods.reduce((sum, period) => {
+        ? convertedPeriods.reduce((sum, period) => {
             return sum.add(period.extraPayAmount);
           }, currency(0)).value
         : 0;

@@ -41,6 +41,9 @@ const legacyExpensesFile = path.join(databaseDirectory, "legacy-expenses.json");
 const salaryHeaders = [
   "recordType",
   "id",
+  "companyName",
+  "positionDescription",
+  "currency",
   "amount",
   "monthlySalary",
   "extraPayAmount",
@@ -172,6 +175,9 @@ function openingBalanceToRow(amount: number): CsvRow {
   return {
     recordType: "openingBalance",
     id: "opening-balance",
+    companyName: "",
+    positionDescription: "",
+    currency: "",
     amount: String(amount),
     monthlySalary: "",
     extraPayAmount: "",
@@ -185,6 +191,9 @@ function salaryPeriodToRow(period: SalaryPeriod): CsvRow {
   return {
     recordType: "salary",
     id: period.id,
+    companyName: period.companyName,
+    positionDescription: period.positionDescription,
+    currency: period.currency,
     amount: "",
     monthlySalary: String(period.monthlySalary),
     extraPayAmount: String(period.extraPayAmount),
@@ -197,6 +206,9 @@ function salaryPeriodToRow(period: SalaryPeriod): CsvRow {
 function rowToSalaryPeriod(row: CsvRow): SalaryPeriod {
   return {
     id: row["id"] || crypto.randomUUID(),
+    companyName: row["companyName"] || "",
+    positionDescription: row["positionDescription"] || "",
+    currency: row["currency"] || "EUR",
     monthlySalary: Number(row["monthlySalary"]),
     extraPayAmount: Number(row["extraPayAmount"]),
     startDate: row["startDate"],
@@ -255,6 +267,9 @@ async function readLegacyData(): Promise<{
             periods: [
               {
                 id: crypto.randomUUID(),
+                companyName: "",
+                positionDescription: "",
+                currency: "EUR",
                 monthlySalary: legacy.salary.monthlySalary ?? 0,
                 extraPayAmount: legacy.salary.extraPayAmount ?? 0,
                 startDate: `${legacy.salary.startMonth ?? new Date().toISOString().slice(0, 7)}-01`,
@@ -363,7 +378,39 @@ async function ensureSalarySchema(): Promise<void> {
   const header = contents.split(/\r?\n/, 1)[0];
   if (header === salaryHeaders.join(",")) return;
 
-  const [legacyRow] = parseCsv(contents);
+  const legacyRows = parseCsv(contents);
+  const currentSalaryRows = legacyRows.filter((row) => {
+    return row["recordType"] === "salary";
+  });
+  if (currentSalaryRows.length > 0) {
+    const openingBalance = legacyRows.find((row) => {
+      return row["recordType"] === "openingBalance";
+    });
+    const migrated: SalaryData = {
+      openingBalance: Number(openingBalance?.["amount"] ?? 0),
+      periods: currentSalaryRows.map((row) => {
+        return {
+          id: row["id"] || crypto.randomUUID(),
+          companyName: row["companyName"] || "",
+          positionDescription: row["positionDescription"] || "",
+          currency: row["currency"] || "EUR",
+          monthlySalary: Number(row["monthlySalary"] ?? 0),
+          extraPayAmount: Number(row["extraPayAmount"] ?? 0),
+          startDate: row["startDate"],
+          endDate: row["endDate"],
+          createdAt: row["createdAt"] || new Date().toISOString(),
+        };
+      }),
+    };
+    await writeFile(
+      salaryFile,
+      serializeCsv(salaryHeaders, salaryDataToRows(migrated)),
+      "utf8",
+    );
+    return;
+  }
+
+  const [legacyRow] = legacyRows;
   const startMonth =
     legacyRow?.["startMonth"] || new Date().toISOString().slice(0, 7);
   const migrated: SalaryData = {
@@ -372,6 +419,9 @@ async function ensureSalarySchema(): Promise<void> {
       ? [
           {
             id: crypto.randomUUID(),
+            companyName: "",
+            positionDescription: "",
+            currency: "EUR",
             monthlySalary: Number(legacyRow["monthlySalary"] ?? 0),
             extraPayAmount: Number(legacyRow["extraPayAmount"] ?? 0),
             startDate: `${startMonth}-01`,

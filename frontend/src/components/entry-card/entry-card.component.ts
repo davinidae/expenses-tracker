@@ -14,5 +14,7 @@ import type { FinancialEntry } from '../../models/finance';
 export class EntryCardComponent {
   @Input({ required: true }) entry!: FinancialEntry;
   @Input() allowRemove = true;
+  @Input() allowEdit = false;
+  @Output() edit = new EventEmitter<FinancialEntry>();
   @Output() remove = new EventEmitter<FinancialEntry>();
 }

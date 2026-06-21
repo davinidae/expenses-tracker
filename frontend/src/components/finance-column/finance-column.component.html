@@ -2,7 +2,6 @@
   <ng-template #header>
     <div class="column-heading">
       <div>
-        <span>{{ kicker }}</span>
         <h2>{{ title }}</h2>
       </div>
 
@@ -34,9 +33,13 @@
           <p-card styleClass="salary-period-card">
             <div class="salary-period-row">
               <div>
-                <strong>{{ period.monthlySalary | currency:'EUR' }}</strong>
+                <strong>{{ period.companyName || 'Unnamed company' }}</strong>
+                @if (period.positionDescription) {
+                  <span>{{ period.positionDescription }}</span>
+                }
+                <small>{{ period.monthlySalary | currency:period.currency }} / month</small>
                 <span>{{ period.startDate }} — {{ period.endDate }}</span>
-                <small>Extra pay: {{ period.extraPayAmount | currency:'EUR' }}</small>
+                <small>Extra pay: {{ period.extraPayAmount | currency:period.currency }}</small>
               </div>
               <div class="salary-row-actions">
                 @if (allowEdit) {
@@ -93,7 +96,9 @@
       @for (entry of entries; track entry.id) {
         <app-entry-card
           [entry]="entry"
+          [allowEdit]="allowEdit"
           [allowRemove]="allowRemove"
+          (edit)="editEntry.emit($event)"
           (remove)="remove.emit($event)"
         />
       } @empty {

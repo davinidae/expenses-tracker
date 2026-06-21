@@ -1,17 +1,20 @@
-import { CurrencyPipe, DatePipe } from "@angular/common";
 import { Component, inject } from "@angular/core";
 import { FormsModule, NgForm } from "@angular/forms";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DatePickerModule } from "primeng/datepicker";
 import { DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
-import { InputNumberModule } from "primeng/inputnumber";
+import { InputTextModule } from "primeng/inputtext";
+import { SelectModule } from "primeng/select";
+import { CURRENCIES } from "../../constants/currencies";
 import type {
   SalaryData,
   SalaryDataInput,
   SalaryPeriod,
   SalaryPeriodInput,
 } from "../../models/finance";
+import { ConfirmDialogDismissDirective } from "../../directives/confirm-dialog-dismiss.directive";
+import { MoneyInputDirective } from "../../directives/money-input.directive";
 import type {
   SalaryDialogData,
   SalaryDialogResult,
@@ -21,13 +24,14 @@ import type {
   selector: "app-salary-dialog",
   standalone: true,
   imports: [
-    CurrencyPipe,
-    DatePipe,
     FormsModule,
     ButtonModule,
     CardModule,
     DatePickerModule,
-    InputNumberModule,
+    InputTextModule,
+    SelectModule,
+    ConfirmDialogDismissDirective,
+    MoneyInputDirective,
   ],
   templateUrl: "./salary-dialog.component.html",
   styleUrl: "./salary-dialog.component.scss",
@@ -43,6 +47,7 @@ export class SalaryDialogComponent {
   protected startDate = new Date();
   protected endDate = new Date();
   protected editingId: string | null = null;
+  protected readonly currencies = CURRENCIES;
 
   constructor() {
     const editPeriodId = this.config.data?.editPeriodId;
@@ -83,6 +88,9 @@ export class SalaryDialogComponent {
   protected editPeriod(period: SalaryDataInput["periods"][number]): void {
     this.editingId = period.id ?? null;
     this.periodModel = {
+      companyName: period.companyName,
+      positionDescription: period.positionDescription,
+      currency: period.currency,
       monthlySalary: period.monthlySalary,
       extraPayAmount: period.extraPayAmount,
       startDate: period.startDate,
@@ -106,7 +114,25 @@ export class SalaryDialogComponent {
     this.endDate = new Date();
   }
 
-  protected submit(): void {
+  protected submit(form: NgForm): void {
+    if (
+      form.invalid ||
+      this.endDate < this.startDate ||
+      !this.periodModel.companyName.trim() ||
+      !this.periodModel.positionDescription.trim() ||
+      !this.periodModel.currency ||
+      this.periodModel.monthlySalary <= 0 ||
+      this.periodModel.extraPayAmount <= 0
+    ) {
+      form.control.markAllAsTouched();
+      return;
+    }
+
+    this.periodModel = {
+      ...this.periodModel,
+      companyName: this.periodModel.companyName.trim(),
+      positionDescription: this.periodModel.positionDescription.trim(),
+    };
     if (this.hasPendingPeriod()) {
       this.commitPendingPeriod();
     }
@@ -175,6 +201,9 @@ export class SalaryDialogComponent {
   private emptyPeriod(): SalaryPeriodInput {
     const today = this.toDateKey(new Date());
     return {
+      companyName: "",
+      positionDescription: "",
+      currency: "EUR",
       monthlySalary: 0,
       extraPayAmount: 0,
       startDate: today,

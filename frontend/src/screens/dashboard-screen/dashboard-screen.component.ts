@@ -17,7 +17,7 @@ import type {
 } from "../../models/finance";
 import { EntryDialogComponent } from "../../components/entry-dialog/entry-dialog.component";
 import type { EntryDialogResult } from "../../components/entry-dialog/entry-dialog.models";
-import { FinanceChartComponent } from "../../components/finance-chart/finance-chart.component";
+import { FinanceChartComponent } from "../../components/finance-chart";
 import {
   FinanceColumnComponent,
   type FinanceColumnType,
@@ -88,8 +88,11 @@ export class DashboardScreenComponent {
   protected openSalaryDialog(period?: SalaryPeriod): void {
     const ref = this.dialogService.open(SalaryDialogComponent, {
       header: "Salary settings",
-      width: "min(520px, 94vw)",
+      width: "min(680px, calc(100vw - 24px))",
       modal: true,
+      dismissableMask: false,
+      closeOnEscape: false,
+      closable: false,
       draggable: false,
       data: {
         salary: this.salary(),
@@ -107,17 +110,29 @@ export class DashboardScreenComponent {
     });
   }
 
-  protected openEntryDialog(type: EntryType): void {
+  protected openEntryDialog(type: EntryType, entry?: FinancialEntry): void {
     const ref = this.dialogService.open(EntryDialogComponent, {
-      header: type === "income" ? "Add one-off income" : "Add one-off expense",
+      header: entry
+        ? `Edit ${type}`
+        : type === "income"
+          ? "Add one-off income"
+          : "Add one-off expense",
       width: "min(520px, 94vw)",
       modal: true,
+      dismissableMask: false,
+      closeOnEscape: false,
+      closable: false,
       draggable: false,
-      data: { type, month: this.selectedMonth },
+      data: { type, month: this.selectedMonth, entry },
     });
 
     ref?.onClose.subscribe((result?: EntryDialogResult) => {
-      if (result) this.saveEntry(result);
+      if (!result) return;
+      if (result.id) {
+        this.updateEntry(result.id, result.input);
+      } else {
+        this.saveEntry(result.input);
+      }
     });
   }
 
@@ -151,6 +166,10 @@ export class DashboardScreenComponent {
         });
       },
     });
+  }
+
+  protected editEntry(entry: FinancialEntry): void {
+    this.openEntryDialog(entry.type, entry);
   }
 
   protected removeSalaryPeriod(period: SalaryPeriod): void {
@@ -224,7 +243,10 @@ export class DashboardScreenComponent {
       header: "Clear salary settings?",
       message: "One-off income and expenses will remain untouched.",
       icon: "pi pi-exclamation-triangle",
-      acceptButtonProps: { label: "Clear", severity: "danger" },
+      acceptButtonProps: {
+        label: "Clear",
+        severity: "danger",
+      },
       rejectButtonProps: {
         label: "Cancel",
         severity: "secondary",
@@ -267,6 +289,32 @@ export class DashboardScreenComponent {
           return this.showError(
             "Could not add entry",
             "The currency could not be converted or the entered data is invalid.",
+          );
+        },
+      });
+  }
+
+  private updateEntry(id: string, input: FinancialEntryInput): void {
+    this.saving.set(true);
+    this.financeService
+      .updateEntry(id, input)
+      .pipe(
+        finalize(() => {
+          return this.saving.set(false);
+        }),
+      )
+      .subscribe({
+        next: () => {
+          this.showSuccess(
+            input.type === "income" ? "Income updated" : "Expense updated",
+            "The entry changes have been saved.",
+          );
+          this.loadDashboard();
+        },
+        error: () => {
+          return this.showError(
+            "Could not update entry",
+            "Please check the entered data.",
           );
         },
       });
